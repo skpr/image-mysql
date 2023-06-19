@@ -14,19 +14,27 @@ This image suite provides 2 streams for images:
 ### Latest
 
 ```
-docker.io/skpr/mysql:5.6-v1-latest
-docker.io/skpr/mysql:5.6-dev-v1-latest
-docker.io/skpr/mysql:8.0-v1-latest
-docker.io/skpr/mysql:8.0-dev-v1-latest
+docker.io/skpr/image-mysql-5.6:v1-latest-amd64
+docker.io/skpr/image-mysql-5.6:dev-v1-latest-amd64
+docker.io/skpr/image-mysql-5.6-empty:v1-latest-amd64
+docker.io/skpr/image-mysql-5.6-empty:dev-v1-latest-amd64
+docker.io/skpr/image-mysql-8.0:v1-latest-amd64
+docker.io/skpr/image-mysql-8.0:dev-v1-latest-amd64
+docker.io/skpr/image-mysql-8.0-empty:v1-latest-amd64
+docker.io/skpr/image-mysql-8.0-empty:dev-v1-latest-amd64
 ```
 
 ### Edge
 
 ```
-docker.io/skpr/mysql:5.6-v1-edge
-docker.io/skpr/mysql:5.6-dev-v1-edge
-docker.io/skpr/mysql:8.0-v1-edge
-docker.io/skpr/mysql:8.0-dev-v1-edge
+docker.io/skpr/image-mysql-5.6:v1-edge
+docker.io/skpr/image-mysql-5.6:dev-v1-edge
+docker.io/skpr/image-mysql-5.6-empty:v1-edge
+docker.io/skpr/image-mysql-5.6-empty:dev-v1-edge
+docker.io/skpr/image-mysql-8.0:v1-edge
+docker.io/skpr/image-mysql-8.0:dev-v1-edge
+docker.io/skpr/image-mysql-8.0-empty:v1-edge
+docker.io/skpr/image-mysql-8.0-empty:dev-v1-edge
 ```
 
 ## Building
