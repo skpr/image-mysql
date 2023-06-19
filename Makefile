@@ -1,49 +1,27 @@
 #!/usr/bin/make -f
 
-IMAGE_REPO_BASE=skpr/image-mysql
-ARCH=amd64
+IMAGE_REPO_BASE=skpr/mysql
+IMAGE_REPO_EMPTY=skpr/mysql-empty
 VERSION_TAG=v1-latest
-
-define build_image
-	docker build --build-arg ARCH=${ARCH} -t ${IMAGE_REPO_BASE}-${1}:${VERSION_TAG}-${ARCH} ${1}
-endef
-
-define test_image
-	container-structure-test test --image ${IMAGE_REPO_BASE}-${1}:${VERSION_TAG}-${ARCH} --config ${1}/tests.yml
-endef
-
-define push_image
-	docker push ${IMAGE_REPO_BASE}-${1}:${VERSION_TAG}-${ARCH}
-endef
-
-define manifest
-	$(eval IMAGE=${IMAGE_REPO_BASE}-${1}:${VERSION_TAG})
-	docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
-    docker manifest push ${IMAGE}
-endef
+ARCH=amd64
 
 build:
-	$(call build_image,5.6)
-	$(call build_image,5.6-empty)
-	$(call build_image,8.0)
-	$(call build_image,8.0-empty)
+		$(eval IMAGE=${IMAGE_REPO_BASE}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH})
+		docker build -t ${IMAGE} ${MYSQL_VERSION}
 
-test:
-	$(call test_image,5.6)
-	$(call test_image,5.6-empty)
-	$(call test_image,8.0)
-	$(call test_image,8.0-empty)
+		$(eval IMAGE=${IMAGE_REPO_EMPTY}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH})
+		docker build --build-arg FROM_IMAGE=${REGISTRY_BASE}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH} -t ${IMAGE} ${MYSQL_VERSION}-empty
 
 push:
-	$(call push_image,5.6)
-	$(call push_image,5.6-empty)
-	$(call push_image,8.0)
-	$(call push_image,8.0-empty)
+		docker push ${IMAGE_REPO_BASE}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH}
+		docker push ${IMAGE_REPO_EMPTY}:${MYSQL_VERSION}-empty-${VERSION_TAG}-${ARCH}
 
 manifest:
-	$(call manifest,5.6)
-	$(call manifest,5.6-empty)
-	$(call manifest,8.0)
-	$(call manifest,8.0-empty)
+		$(eval IMAGE=${IMAGE_REPO_BASE}:${MYSQL_VERSION}-${VERSION_TAG})
+		docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
+		docker manifest push ${IMAGE}
+		$(eval IMAGE=${IMAGE_REPO_EMPTY}:${MYSQL_VERSION}-empty-${VERSION_TAG})
+		docker manifest create ${IMAGE} --amend ${IMAGE}-arm64 --amend ${IMAGE}-amd64
+		docker manifest push ${IMAGE}
 
 .PHONY: *

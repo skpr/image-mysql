@@ -3,41 +3,110 @@ version: 2.1
 executors:
   amd64:
     machine:
-      image: ubuntu-2204:2023.04.2
+      image: ubuntu-2004:202111-02
     resource_class: medium
-
   arm64:
     machine:
-      image: ubuntu-2204:2023.04.2
+      image: ubuntu-2004:202111-02
     resource_class: arm.medium
 
 platforms: &platforms
   - amd64
   - arm64
 
+mysql_version: &versions
+  - 5.6
+  - 8.0
+
 workflows:
-  build:
+  build_test:
     jobs:
       - build:
+          stream: test
+          push: false
           context: docker-publishing
           matrix:
             parameters:
               executor: *platforms
+              versions: *versions
+          filters:
+            branches:
+              ignore: [ main, releases ]
+
+  build_edge:
+    jobs:
+      - build:
+          stream: edge
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+              versions: *versions
+          filters:
+            branches:
+              only: [ main ]
       - manifest:
+          stream: edge
           context: docker-publishing
           requires: [ build ]
           filters:
             branches:
               only: [ main ]
 
-  nightly:
+  build_latest:
     jobs:
       - build:
+          stream: latest
           context: docker-publishing
           matrix:
             parameters:
               executor: *platforms
+              versions: *versions
+          filters:
+            branches:
+              only: [ releases ]
       - manifest:
+          stream: latest
+          context: docker-publishing
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
+
+  build_empty:
+    jobs:
+      - build:
+          stream: empty
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+              versions: *versions
+          filters:
+            branches:
+              only: [ releases ]
+      - manifest:
+          stream: latest
+          context: docker-publishing
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
+
+  nightly_edge:
+    jobs:
+      - build:
+          stream: edge
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+              versions: *versions
+          filters:
+            branches:
+              only: [ main ]
+      - manifest:
+          stream: edge
           context: docker-publishing
           requires: [ build ]
           filters:
@@ -51,50 +120,70 @@ workflows:
             branches:
               only: [ main ]
 
+  nightly_latest:
+    jobs:
+      - build:
+          stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+              versions: *versions
+          filters:
+            branches:
+              only: [ releases ]
+      - manifest:
+          stream: latest
+          context: docker-publishing
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
+    triggers:
+      - schedule:
+          # Scheduled build for 2am AEST nightly.
+          cron: "0 15 * * *"
+          filters:
+            branches:
+              only: [ releases ]
+
 jobs:
   build:
     parameters:
       executor:
         type: string
+      push:
+        type: boolean
+        default: true
+      stream:
+        type: string
       version:
         type: string
-    machine: true
     executor: << parameters.executor >>
     steps:
       - checkout
       - run:
-          name: "Get SHA1 version"
-          command: |
-            SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
-            echo 'export SHA1_VERSION=$SHA1_VERSION' >> $BASH_ENV
-      - run:
-          name: "Install: Container Structure Tests"
-          command: |
-            curl -LO https://storage.googleapis.com/container-structure-test/v1.11.0/container-structure-test-linux-<< parameters.executor >> && \
-            mv container-structure-test-linux-<< parameters.executor >> container-structure-test && \
-            chmod +x container-structure-test && \
-            sudo mv container-structure-test /usr/local/bin/
-      - run:
-          name: "Build, Test and Release"
+          name: Build, Test and Release
           command: |
             SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
-            make build ARCH=<< parameters.executor >> VERSION_TAG=v1-latest
-            make build ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
+            make build MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
+            make build MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
       - when:
           condition:
-            or:
-              - equal: ["main", << pipeline.git.branch >> ]
-              - equal: [ "multiarch", << pipeline.git.branch >> ]
+            equal: [ true, << parameters.push >> ]
           steps:
             - run:
                 name: "Push image"
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                   SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
-                  make push ARCH=<< parameters.executor >> VERSION_TAG=v1-latest
+                  make push ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
                   make push ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
 
   manifest:
+    parameters:
+      stream:
+        type: string
     docker:
       - image: cimg/base:2022.02
     steps:
@@ -108,5 +197,5 @@ jobs:
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
-            make manifest VERSION_TAG=v1-latest
+            make manifest VERSION_TAG=v1-<< parameters.stream >>
             make manifest VERSION_TAG=${SHA1_VERSION}
