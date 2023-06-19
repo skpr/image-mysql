@@ -83,7 +83,7 @@ jobs:
       - when:
           condition:
             or:
-              - equal: ["master", << pipeline.git.branch >> ]
+              - equal: ["main", << pipeline.git.branch >> ]
               - equal: [ "multiarch", << pipeline.git.branch >> ]
           steps:
             - run:
