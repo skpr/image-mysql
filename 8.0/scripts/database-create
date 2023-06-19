@@ -1,0 +1,13 @@
+#!/bin/bash
+
+NAME=$1
+FILE=$2
+
+echo "Creating database ${NAME}..."
+mysql -uroot -proot -e "CREATE DATABASE ${NAME}"
+
+echo "Importing database ${NAME} from ${FILE} ..."
+mysql -uroot -proot -D ${NAME} < ${FILE}
+
+echo "Analyzing databases..."
+mysqlcheck -uroot -proot --auto-repair --analyze ${NAME}
