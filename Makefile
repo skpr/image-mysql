@@ -24,21 +24,25 @@ endef
 
 build:
 	$(call build_image,5.6)
+	$(call build_image,5.6-empty)
 	$(call build_image,8.0)
 	$(call build_image,8.0-empty)
 
 test:
 	$(call test_image,5.6)
+	$(call test_image,5.6-empty)
 	$(call test_image,8.0)
 	$(call test_image,8.0-empty)
 
 push:
 	$(call push_image,5.6)
+	$(call push_image,5.6-empty)
 	$(call push_image,8.0)
 	$(call push_image,8.0-empty)
 
 manifest:
 	$(call manifest,5.6)
+	$(call manifest,5.6-empty)
 	$(call manifest,8.0)
 	$(call manifest,8.0-empty)
 
