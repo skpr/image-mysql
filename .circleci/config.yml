@@ -75,7 +75,7 @@ workflows:
 
   build_empty:
     jobs:
-      - build:
+      - build-empty:
           stream: empty
           context: docker-publishing
           matrix:
@@ -168,6 +168,37 @@ jobs:
             SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
             make build MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
             make build MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
+      - when:
+          condition:
+            equal: [ true, << parameters.push >> ]
+          steps:
+            - run:
+                name: "Push image"
+                command: |
+                  echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                  SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
+                  make push ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
+                  make push ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
+  build-empty:
+    parameters:
+      executor:
+        type: string
+      push:
+        type: boolean
+        default: true
+      stream:
+        type: string
+      version:
+        type: string
+    executor: << parameters.executor >>
+    steps:
+      - checkout
+      - run:
+          name: Build, Test and Release
+          command: |
+            SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
+            make build-empty MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
+            make build-empty MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
       - when:
           condition:
             equal: [ true, << parameters.push >> ]

@@ -9,8 +9,9 @@ build:
 		$(eval IMAGE=${IMAGE_REPO_BASE}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH})
 		docker build -t ${IMAGE} ${MYSQL_VERSION}
 
+build-empty:
 		$(eval IMAGE=${IMAGE_REPO_EMPTY}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH})
-		docker build --build-arg FROM_IMAGE=${REGISTRY_BASE}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH} -t ${IMAGE} ${MYSQL_VERSION}-empty
+		docker build --build-arg FROM_IMAGE=${REGISTRY_BASE}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH} --build-arg MYSQL_VERSION=${MYSQL_VERSION} -t ${IMAGE} empty
 
 push:
 		docker push ${IMAGE_REPO_BASE}:${MYSQL_VERSION}-${VERSION_TAG}-${ARCH}
