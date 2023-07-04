@@ -1,5 +1,4 @@
-ARG MYSQL_VERSION
-FROM skpr/mysql:${MYSQL_VERSION}-v1-latest-amd64
+FROM skpr/mysql:8.x-v1-latest-amd64
 
 ARG db_name=local
 ARG db_user=local

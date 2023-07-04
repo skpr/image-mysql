@@ -1,31 +1,26 @@
--- Copyright (c) 2018 MariaDB Foundation
+-- MariaDB dump 10.19  Distrib 10.5.19-MariaDB, for Linux (x86_64)
 --
--- This program is free software; you can redistribute it and/or modify
--- it under the terms of the GNU General Public License as published by
--- the Free Software Foundation; version 2 of the License.
---
--- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--- GNU General Public License for more details.
---
--- You should have received a copy of the GNU General Public License
--- along with this program; if not, write to the Free Software
--- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+-- Host: 127.0.0.1    Database: local
+-- ------------------------------------------------------
+-- Server version	8.0.33-0ubuntu0.22.04.2
 
-CREATE DATABASE IF NOT EXISTS test CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Fill "db" table with default grants for anyone to
--- access database 'test' and 'test_%' if "db" table didn't exist
-CREATE TEMPORARY TABLE tmp_db LIKE db;
-INSERT INTO tmp_db VALUES ('%','test','','Y','Y','Y','Y','Y','Y','N','Y','Y','Y','Y','Y','Y','Y','Y','N','N','Y','Y','Y');
-INSERT INTO tmp_db VALUES ('%','test\_%','','Y','Y','Y','Y','Y','Y','N','Y','Y','Y','Y','Y','Y','Y','Y','N','N','Y','Y','Y');
-INSERT INTO db SELECT * FROM tmp_db WHERE @had_db_table=0;
-DROP TABLE tmp_db;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Anonymous user with no privileges.
-CREATE TEMPORARY TABLE tmp_user_anonymous LIKE global_priv;
-INSERT INTO tmp_user_anonymous (host,user) VALUES ('localhost','');
-INSERT INTO tmp_user_anonymous (host,user) SELECT @current_hostname,'' FROM dual WHERE @current_hostname != 'localhost';
-INSERT INTO global_priv SELECT * FROM tmp_user_anonymous WHERE @had_user_table=0;
-DROP TABLE tmp_user_anonymous;
+-- Dump completed on 2023-06-07  1:16:48

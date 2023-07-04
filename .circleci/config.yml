@@ -14,10 +14,6 @@ platforms: &platforms
   - amd64
   - arm64
 
-mysql_version: &versions
-  - 5.6
-  - 8.0
-
 workflows:
   build_test:
     jobs:
@@ -28,7 +24,6 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              versions: *versions
           filters:
             branches:
               ignore: [ main, releases ]
@@ -41,7 +36,6 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              versions: *versions
           filters:
             branches:
               only: [ main ]
@@ -61,7 +55,6 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              versions: *versions
           filters:
             branches:
               only: [ releases ]
@@ -81,7 +74,6 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              versions: *versions
           filters:
             branches:
               only: [ releases ]
@@ -101,7 +93,6 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              versions: *versions
           filters:
             branches:
               only: [ main ]
@@ -128,7 +119,6 @@ workflows:
           matrix:
             parameters:
               executor: *platforms
-              versions: *versions
           filters:
             branches:
               only: [ releases ]
@@ -165,9 +155,9 @@ jobs:
       - run:
           name: Build, Test and Release
           command: |
-            SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
-            make build MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
-            make build MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
+            SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
+            make build ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
+            make build ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
       - when:
           condition:
             equal: [ true, << parameters.push >> ]
@@ -176,8 +166,8 @@ jobs:
                 name: "Push image"
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                  SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
-                  make push ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
+                  SHA1_VERSION="v31-$(git rev-parse --short HEAD)"
+                  make push ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
                   make push ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
   build-empty:
     parameters:
@@ -196,9 +186,9 @@ jobs:
       - run:
           name: Build, Test and Release
           command: |
-            SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
-            make build-empty MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
-            make build-empty MYSQL_VERSION=<< parameters.version >> ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
+            SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
+            make build-empty ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
+            make build-empty ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
       - when:
           condition:
             equal: [ true, << parameters.push >> ]
@@ -207,8 +197,8 @@ jobs:
                 name: "Push image"
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                  SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
-                  make push ARCH=<< parameters.executor >> VERSION_TAG=v1-<< parameters.stream >>
+                  SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
+                  make push ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
                   make push ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
 
   manifest:
@@ -227,6 +217,6 @@ jobs:
           command: |
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            SHA1_VERSION="v1-$(git rev-parse --short HEAD)"
-            make manifest VERSION_TAG=v1-<< parameters.stream >>
+            SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
+            make manifest VERSION_TAG=v3-<< parameters.stream >>
             make manifest VERSION_TAG=${SHA1_VERSION}

@@ -37,5 +37,5 @@ skpr/mysql-empty:8.0-v1-edge
 ## Building
 
 ```
-make build MYSQL_VERSION=8.0
+make build
 ```
