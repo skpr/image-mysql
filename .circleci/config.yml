@@ -66,25 +66,6 @@ workflows:
             branches:
               only: [ releases ]
 
-  build_empty:
-    jobs:
-      - build-empty:
-          stream: empty
-          context: docker-publishing
-          matrix:
-            parameters:
-              executor: *platforms
-          filters:
-            branches:
-              only: [ releases ]
-      - manifest:
-          stream: latest
-          context: docker-publishing
-          requires: [ build ]
-          filters:
-            branches:
-              only: [ releases ]
-
   nightly_edge:
     jobs:
       - build:
@@ -167,37 +148,6 @@ jobs:
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                   SHA1_VERSION="v31-$(git rev-parse --short HEAD)"
-                  make push ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
-                  make push ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
-  build-empty:
-    parameters:
-      executor:
-        type: string
-      push:
-        type: boolean
-        default: true
-      stream:
-        type: string
-      version:
-        type: string
-    executor: << parameters.executor >>
-    steps:
-      - checkout
-      - run:
-          name: Build, Test and Release
-          command: |
-            SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
-            make build-empty ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
-            make build-empty ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
-      - when:
-          condition:
-            equal: [ true, << parameters.push >> ]
-          steps:
-            - run:
-                name: "Push image"
-                command: |
-                  echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                  SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
                   make push ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
                   make push ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
 

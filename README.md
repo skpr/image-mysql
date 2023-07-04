@@ -15,27 +15,25 @@ This image suite provides 3 streams for images:
 ### Latest
 
 ```
-skpr/mysql:5.6-v1-latest-amd64
-skpr/mysql:5.6-v1-dev-latest-amd64
-skpr/mysql-empty:5.6-v1-latest-amd64
-skpr/mysql-empty:5.6-dev-v1-latest-amd64
-skpr/mysql:8.0-v1-latest-amd64
-skpr/mysql:8.0-dev-v1-latest-amd64
-skpr/mysql-empty:8.0-dev-v1-latest-amd64
-skpr/mysql-empty:8.0-v1-latest-amd64
+skpr/mysql:8.x-v3-latest-amd64
+skpr/mysql:8.x-v3-latest-arm64
 ```
 
 ### Edge
 
 ```
-skpr/mysql:5.6-v1-edge
-skpr/mysql-empty:5.6-v1-edge
-skpr/mysql:8.0-v1-edge
-skpr/mysql-empty:8.0-v1-edge
+skpr/mysql-empty:8.x-edge-amd64
+skpr/mysql-empty:8.x-edge-arm64
+```
+
+### Empty
+
+```
+skpr/mysql-empty:8.x-v3-latest-amd64
 ```
 
 ## Building
 
 ```
-make build
+VERSION_TAG=v3-latest make build
 ```
