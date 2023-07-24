@@ -128,8 +128,6 @@ jobs:
         default: true
       stream:
         type: string
-      version:
-        type: string
     executor: << parameters.executor >>
     steps:
       - checkout
