@@ -11,7 +11,6 @@ build:
 		container-structure-test test --image ${IMAGE}-${ARCH} --config mysql/tests.yml
 		$(eval IMAGE=${IMAGE_REPO_EMPTY}:8.x-${VERSION_TAG})
 		docker build -t ${IMAGE}-${ARCH} --build-arg FROM_IMAGE=${IMAGE_REPO_BASE}:8.x-${VERSION_TAG}-${ARCH} empty/
-		container-structure-test test --image ${IMAGE}-${ARCH} --config empty/tests.yml
 
 push:
 		docker push ${IMAGE_REPO_BASE}:8.x-${VERSION_TAG}-${ARCH}

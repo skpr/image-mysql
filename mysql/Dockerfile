@@ -25,7 +25,7 @@ RUN mkdir -p /run/mysqld && \
 VOLUME /run/mysqld
 
 COPY scripts /usr/local/bin
-RUN chmod +x /usr/local/bin/*
+RUN chmod 755 /usr/local/bin/*
 
 ENV MYSQL_TCP_PORT=3306
 
