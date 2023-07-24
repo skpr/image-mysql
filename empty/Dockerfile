@@ -1,4 +1,5 @@
-FROM skpr/mysql:8.x-v1-latest-amd64
+ARG FROM_IMAGE
+FROM ${FROM_IMAGE}
 
 ARG db_name=local
 ARG db_user=local
