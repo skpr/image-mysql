@@ -1,0 +1,170 @@
+version: 2.1
+
+executors:
+  amd64:
+    machine:
+      image: ubuntu-2004:202111-02
+    resource_class: medium
+  arm64:
+    machine:
+      image: ubuntu-2004:202111-02
+    resource_class: arm.medium
+
+platforms: &platforms
+  - amd64
+  - arm64
+
+workflows:
+  build_test:
+    jobs:
+      - build:
+          stream: $CIRCLE_SHA1
+          push: false
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+          filters:
+            branches:
+              ignore: [ main, releases ]
+
+  build_edge:
+    jobs:
+      - build:
+          stream: edge
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+          filters:
+            branches:
+              only: [ main ]
+      - manifest:
+          stream: edge
+          context: docker-publishing
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ main ]
+
+  build_latest:
+    jobs:
+      - build:
+          stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+          filters:
+            branches:
+              only: [ releases ]
+      - manifest:
+          stream: latest
+          context: docker-publishing
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
+
+  nightly_edge:
+    jobs:
+      - build:
+          stream: edge
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+          filters:
+            branches:
+              only: [ main ]
+      - manifest:
+          stream: edge
+          context: docker-publishing
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ main ]
+    triggers:
+      - schedule:
+          # Scheduled build for 2am AEST nightly.
+          cron: "0 15 * * *"
+          filters:
+            branches:
+              only: [ main ]
+
+  nightly_latest:
+    jobs:
+      - build:
+          stream: latest
+          context: docker-publishing
+          matrix:
+            parameters:
+              executor: *platforms
+          filters:
+            branches:
+              only: [ releases ]
+      - manifest:
+          stream: latest
+          context: docker-publishing
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ releases ]
+    triggers:
+      - schedule:
+          # Scheduled build for 2am AEST nightly.
+          cron: "0 15 * * *"
+          filters:
+            branches:
+              only: [ releases ]
+
+jobs:
+  build:
+    parameters:
+      executor:
+        type: string
+      push:
+        type: boolean
+        default: true
+      stream:
+        type: string
+    executor: << parameters.executor >>
+    steps:
+      - checkout
+      - run:
+          name: Install 
+          command: |
+            curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-<< parameters.executor >> && \
+            chmod +x container-structure-test-linux-<< parameters.executor >> && \
+            sudo mv container-structure-test-linux-<< parameters.executor >> /usr/local/bin/container-structure-test
+      - run:
+          name: Build, Test and Release
+          command: |
+            make build ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
+      - when:
+          condition:
+            equal: [ true, << parameters.push >> ]
+          steps:
+            - run:
+                name: "Push image"
+                command: |
+                  echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                  make push ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
+
+  manifest:
+    parameters:
+      stream:
+        type: string
+    docker:
+      - image: cimg/base:2022.02
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.7
+      - run:
+          name: Push Manifest
+          command: |
+            export DOCKER_CLI_EXPERIMENTAL=enabled
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            make manifest VERSION_TAG=v3-<< parameters.stream >>
