@@ -142,7 +142,6 @@ jobs:
           command: |
             SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
             make build ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
-            make build ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
       - when:
           condition:
             equal: [ true, << parameters.push >> ]
