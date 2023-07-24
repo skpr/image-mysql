@@ -140,7 +140,6 @@ jobs:
       - run:
           name: Build, Test and Release
           command: |
-            SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
             make build ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
       - when:
           condition:
@@ -150,7 +149,6 @@ jobs:
                 name: "Push image"
                 command: |
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                  SHA1_VERSION="v31-$(git rev-parse --short HEAD)"
                   make push ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
 
   manifest:
@@ -169,5 +167,4 @@ jobs:
           command: |
             export DOCKER_CLI_EXPERIMENTAL=enabled
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
             make manifest VERSION_TAG=v3-<< parameters.stream >>
