@@ -132,6 +132,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install 
+          command: |
+            curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-<< parameters.executor >> && \
+            chmod +x container-structure-test-linux-<< parameters.executor >> && \
+            sudo mv container-structure-test-linux-<< parameters.executor >> /usr/local/bin/container-structure-test
+      - run:
           name: Build, Test and Release
           command: |
             SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
