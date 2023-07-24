@@ -18,7 +18,7 @@ workflows:
   build_test:
     jobs:
       - build:
-          stream: test
+          stream: $SHA1_VERSION
           push: false
           context: docker-publishing
           matrix:
@@ -153,7 +153,6 @@ jobs:
                   echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                   SHA1_VERSION="v31-$(git rev-parse --short HEAD)"
                   make push ARCH=<< parameters.executor >> VERSION_TAG=v3-<< parameters.stream >>
-                  make push ARCH=<< parameters.executor >> VERSION_TAG=${SHA1_VERSION}
 
   manifest:
     parameters:
@@ -173,4 +172,3 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             SHA1_VERSION="v3-$(git rev-parse --short HEAD)"
             make manifest VERSION_TAG=v3-<< parameters.stream >>
-            make manifest VERSION_TAG=${SHA1_VERSION}
