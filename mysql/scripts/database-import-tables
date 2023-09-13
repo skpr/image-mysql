@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DATABASE=$1
+DUMP_DIR=$2
+
+mysql-drop-tables ${MYSQL_USERNAME} ${MYSQL_PASSWORD} ${MYSQL_HOSTNAME} ${DATABASE}
+
+for i in ${DUMP_DIR}/*.sql
+do
+  echo "Staring to import file: $i"
+  time mysql --user=${MYSQL_USERNAME} --password=${MYSQL_PASSWORD} --host=${MYSQL_HOSTNAME} ${DATABASE} < $i
+  echo "Finished importing file: $i"
+done

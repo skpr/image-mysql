@@ -32,6 +32,10 @@ ENV MYSQL_TCP_PORT=3306
 
 ADD my.cnf /etc/mysql/mysql.cnf
 
+# MTK - A toolkit for exporting, sanitizing and packaging MySQL database.
+# https://github.com/skpr/mtk
+COPY --from=ghcr.io/skpr/mtk:main /usr/local/bin/mtk /usr/local/bin/mtk
+
 USER mysql
 
 CMD ["/usr/local/bin/mysql-start"]
