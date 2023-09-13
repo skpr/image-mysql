@@ -8,6 +8,8 @@ mysql-drop-tables ${MYSQL_USERNAME} ${MYSQL_PASSWORD} ${MYSQL_HOSTNAME} ${DATABA
 for i in ${DUMP_DIR}/*.sql
 do
   echo "Staring to import file: $i"
-  time mysql --user=${MYSQL_USERNAME} --password=${MYSQL_PASSWORD} --host=${MYSQL_HOSTNAME} ${DATABASE} < $i
-  echo "Finished importing file: $i"
+  start=$(date +%s)
+  mysql --user=${MYSQL_USERNAME} --password=${MYSQL_PASSWORD} --host=${MYSQL_HOSTNAME} ${DATABASE} < $i
+  end=$(date +%s)
+  echo "Finished importing file ($i) in: $(($end-$start)) seconds"
 done
