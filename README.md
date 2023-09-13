@@ -16,6 +16,8 @@ This image suite provides 3 streams for images:
 ```
 skpr/mysql:8.x-v3-latest
 skpr/mysql-empty:8.x-v3-latest
+skpr/mysql-dump:8.x-v3-latest
+skpr/mysql-import:8.x-v3-latest
 ```
 
 ### Edge
@@ -23,6 +25,8 @@ skpr/mysql-empty:8.x-v3-latest
 ```
 skpr/mysql:8.x-v3-edge
 skpr/mysql-empty:8.x-v3-edge
+skpr/mysql-dump:8.x-v3-edge
+skpr/mysql-import:8.x-v3-edge
 ```
 
 ## Building
