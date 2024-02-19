@@ -5,11 +5,11 @@ DUMP_DIR=$2
 
 mysql-drop-tables ${MYSQL_USERNAME} ${MYSQL_PASSWORD} ${MYSQL_HOSTNAME} ${DATABASE}
 
-for i in ${DUMP_DIR}/*.sql
+for i in ${DUMP_DIR}/*.sql.gz
 do
   echo "Starting to import: $i"
   start=$(date +%s)
-  MYSQL_PWD="${MYSQL_PASSWORD}" mysql --user=${MYSQL_USERNAME} --host=${MYSQL_HOSTNAME} ${DATABASE} < $i
+  MYSQL_PWD="${MYSQL_PASSWORD}" zcat ${i} | mysql --user=${MYSQL_USERNAME} --host=${MYSQL_HOSTNAME} ${DATABASE}
   end=$(date +%s)
   echo "Finished importing $i in: $(($end-$start)) seconds"
 done
