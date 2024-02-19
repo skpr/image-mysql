@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Requires the following environment variables.
+#  - MYSQL_HOSTNAME
+#  - MYSQL_USERNAME
+#  - MYSQL_PASSWORD
+
+DATABASE=$1
+DUMP_FILE=$2
+
+echo "$(date) | Starting to import: ${DUMP_FILE}"
+start=$(date +%s)
+
+MYSQL_PWD="${MYSQL_PASSWORD}" zcat ${DUMP_FILE} | mysql --user=${MYSQL_USERNAME} --host=${MYSQL_HOSTNAME} ${DATABASE}
+
+end=$(date +%s)
+echo "$(date) | Finished importing ${DUMP_FILE} in: $(($end-$start)) seconds"
