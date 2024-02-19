@@ -3,13 +3,8 @@
 DATABASE=$1
 DUMP_DIR=$2
 
+echo "$(date) | Dropping Tables"
 mysql-drop-tables ${MYSQL_USERNAME} ${MYSQL_PASSWORD} ${MYSQL_HOSTNAME} ${DATABASE}
 
-for i in ${DUMP_DIR}/*.sql
-do
-  echo "Starting to import: $i"
-  start=$(date +%s)
-  MYSQL_PWD="${MYSQL_PASSWORD}" mysql --user=${MYSQL_USERNAME} --host=${MYSQL_HOSTNAME} ${DATABASE} < $i
-  end=$(date +%s)
-  echo "Finished importing $i in: $(($end-$start)) seconds"
-done
+echo "$(date) | Importing Tables"
+find . -name "${DUMP_DIR}/*.sql.gz"| xargs database-import-table ${DATABASE}

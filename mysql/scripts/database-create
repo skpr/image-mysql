@@ -3,11 +3,11 @@
 NAME=$1
 FILE=$2
 
-echo "Creating database ${NAME}..."
+echo "$(date) | Creating database ${NAME}..."
 mysql -uroot -proot -e "CREATE DATABASE ${NAME}"
 
-echo "Importing database ${NAME} from ${FILE} ..."
+echo "$(date) | Importing database ${NAME} from ${FILE} ..."
 mysql -uroot -proot -D ${NAME} < ${FILE}
 
-echo "Analyzing databases..."
+echo "$(date) | Analyzing databases..."
 mysqlcheck -uroot -proot --auto-repair --analyze ${NAME}
