@@ -6,7 +6,7 @@ DUMP_FILE=$3
 
 mysql-drop-tables ${MYSQL_USERNAME} ${MYSQL_PASSWORD} ${MYSQL_HOSTNAME} ${DATABASE}
 
-echo "Starting to import: ${DUMP_DIR}/${DUMP_FILE}"
+echo "Importing ${DUMP_DIR}/${DUMP_FILE} ..."
 start=$(date +%s)
 MYSQL_PWD="${MYSQL_PASSWORD}" mysql --user=${MYSQL_USERNAME} --host=${MYSQL_HOSTNAME} ${DATABASE} < ${DUMP_DIR}/${DUMP_FILE}
 end=$(date +%s)
