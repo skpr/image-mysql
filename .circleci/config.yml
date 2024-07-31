@@ -33,7 +33,7 @@ workflows:
           requires: [ build ]
           filters:
             branches:
-              only: [ main ]
+              ignore: [ main, releases ]
 
   build_edge:
     jobs:
