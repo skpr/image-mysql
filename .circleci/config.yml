@@ -19,7 +19,7 @@ workflows:
     jobs:
       - build:
           stream: $CIRCLE_SHA1
-          push: false
+          #push: false
           context: docker-publishing
           matrix:
             parameters:
