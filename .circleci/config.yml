@@ -19,18 +19,11 @@ workflows:
     jobs:
       - build:
           stream: $CIRCLE_SHA1
-          #push: false
+          push: false
           context: docker-publishing
           matrix:
             parameters:
               executor: *platforms
-          filters:
-            branches:
-              ignore: [ main, releases ]
-      - manifest:
-          stream: $CIRCLE_SHA1
-          context: docker-publishing
-          requires: [ build ]
           filters:
             branches:
               ignore: [ main, releases ]
