@@ -35,11 +35,6 @@ fileExistenceTests:
     shouldExist: true
     permissions: '-rwxr-xr-x'
 
-  - name: 'Database: Import File'
-    path: '/usr/local/bin/database-import-file'
-    shouldExist: true
-    permissions: '-rwxr-xr-x'
-
   - name: 'Database: Restore'
     path: '/usr/local/bin/database-restore'
     shouldExist: true
