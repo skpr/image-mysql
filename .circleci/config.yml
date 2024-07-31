@@ -27,6 +27,13 @@ workflows:
           filters:
             branches:
               ignore: [ main, releases ]
+      - manifest:
+          stream: $CIRCLE_SHA1
+          context: docker-publishing
+          requires: [ build ]
+          filters:
+            branches:
+              only: [ main ]
 
   build_edge:
     jobs:
