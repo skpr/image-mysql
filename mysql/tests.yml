@@ -20,6 +20,16 @@ fileExistenceTests:
     shouldExist: true
     permissions: '-rwxr-xr-x'
 
+  - name: 'Database: Dump'
+    path: '/usr/local/bin/database-dump'
+    shouldExist: true
+    permissions: '-rwxr-xr-x'
+
+  - name: 'Database: Dump Tables'
+    path: '/usr/local/bin/database-dump-tables'
+    shouldExist: true
+    permissions: '-rwxr-xr-x'
+
   - name: 'Database: Import'
     path: '/usr/local/bin/database-import'
     shouldExist: true
