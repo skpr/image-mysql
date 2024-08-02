@@ -16,3 +16,5 @@ do
   end=$(date +%s)
   echo "Finished importing $i in: $(($end-$start)) seconds"
 done
+
+mysql -uroot -proot -e "ALTER INSTANCE ENABLE INNODB REDO_LOG;"

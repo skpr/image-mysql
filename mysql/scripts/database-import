@@ -13,6 +13,8 @@ mysql -uroot -proot -e "ALTER INSTANCE DISABLE INNODB REDO_LOG;"
 
 database-create $NAME $FILE
 
+mysql -uroot -proot -e "ALTER INSTANCE ENABLE INNODB REDO_LOG;"
+
 user-create $NAME $USER $PASS
 
 mysql-stop
