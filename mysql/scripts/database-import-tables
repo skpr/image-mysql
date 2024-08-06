@@ -5,9 +5,6 @@ DUMP_DIR=$2
 
 mysql-drop-tables ${MYSQL_USERNAME} ${MYSQL_PASSWORD} ${MYSQL_HOSTNAME} ${DATABASE}
 
-#https://dev.mysql.com/doc/refman/8.4/en/innodb-redo-log.html#innodb-disable-redo-logging
-mysql -uroot -proot -e "ALTER INSTANCE DISABLE INNODB REDO_LOG;"
-
 for i in ${DUMP_DIR}/*.sql
 do
   echo "Starting to import: $i"
@@ -16,5 +13,3 @@ do
   end=$(date +%s)
   echo "Finished importing $i in: $(($end-$start)) seconds"
 done
-
-mysql -uroot -proot -e "ALTER INSTANCE ENABLE INNODB REDO_LOG;"
