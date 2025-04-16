@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DATABASE=$1
+DUMP_DIR=$2
+
+echo "Dumping ${DATABASE} to ${DUMP_DIR}/${DATABASE}.sql ..."
+mtk dump ${DATABASE} > "${DUMP_DIR}/${DATABASE}.sql"
