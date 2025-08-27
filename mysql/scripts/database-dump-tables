@@ -3,4 +3,4 @@
 DATABASE=$1
 DUMP_DIR=$2
 
-mtk table list ${DATABASE} | xargs -I {} sh -c "mtk dump ${DATABASE} '{}' > '${DUMP_DIR}/{}.sql'"
+mtk dump-tables $DATABASE $DUMP_DIR

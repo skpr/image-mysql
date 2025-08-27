@@ -34,7 +34,7 @@ ADD my.cnf /etc/mysql/mysql.cnf
 
 # MTK - A toolkit for exporting, sanitizing and packaging MySQL database.
 # https://github.com/skpr/mtk
-COPY --from=ghcr.io/skpr/mtk:v2.1.1 /usr/local/bin/mtk /usr/local/bin/mtk
+COPY --from=ghcr.io/skpr/mtk:v2.2.0 /usr/local/bin/mtk /usr/local/bin/mtk
 
 USER mysql
 
