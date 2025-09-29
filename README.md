@@ -4,33 +4,42 @@ Images for building and running applications with a database.
 
 ## Streams
 
-This image suite provides 3 streams for images:
+This image suite provides 2 streams for images:
 
-* `latest` - A stable upstream.
-* `edge` - Recently merged changes which will be merged into `latest` as part of a release.
+* `stable` - Our production/stable upstream for projects. Use this by default.
+* `latest` - Recently merged changes which will be merged into `stable` as part of a release.
 
 ## Images
 
-### Latest
+Images are available in the following registries:
+
+* `ghcr.io`
+* `docker.io`
+
+## Image List
+
+Below is the list of PHP images we provide.
+
+By default we recommend the following registry and stream:
 
 ```
-skpr/mysql:8.x-v3-latest
-skpr/mysql-empty:8.x-v3-latest
-skpr/mysql-dump:8.x-v3-latest
-skpr/mysql-import:8.x-v3-latest
+REGISTRY=docker.io
+STREAM=stable
 ```
 
-### Edge
+**Stable**
 
 ```
-skpr/mysql:8.x-v3-edge
-skpr/mysql-empty:8.x-v3-edge
-skpr/mysql-dump:8.x-v3-edge
-skpr/mysql-import:8.x-v3-edge
+REGISTRY/skpr/mysql:8.x-v3-STREAM
+REGISTRY/skpr/mysql-empty:8.x-v3-STREAM
+REGISTRY/skpr/mysql-dump:8.x-v3-STREAM
+REGISTRY/skpr/mysql-import:8.x-v3-STREAM
 ```
 
 ## Building
 
+Run the following command to build the images:
+
 ```
-VERSION_TAG=v3-latest make build
+make
 ```

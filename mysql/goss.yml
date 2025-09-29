@@ -1,0 +1,29 @@
+command:
+  sql_mode_set:
+    exec: "mysqld --verbose --help"
+    exit-status: 0
+    stdout:
+      - "NO_AUTO_VALUE_ON_ZERO"
+
+file:
+  /usr/local/bin/database-backup:
+    exists: true
+    mode: "0755"
+  /usr/local/bin/database-create:
+    exists: true
+    mode: "0755"
+  /usr/local/bin/database-import:
+    exists: true
+    mode: "0755"
+  /usr/local/bin/database-restore:
+    exists: true
+    mode: "0755"
+  /usr/local/bin/mysql-start:
+    exists: true
+    mode: "0755"
+  /usr/local/bin/mysql-stop:
+    exists: true
+    mode: "0755"
+  /usr/local/bin/user-create:
+    exists: true
+    mode: "0755"
