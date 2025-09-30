@@ -1,5 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-echo "Stopping Mysql..."
+echo "Stopping MySQL..."
 
-killall --wait mysqld
+if pgrep -x mysqld >/dev/null; then
+  # ask nicely, then wait up to 30s
+  pkill -TERM -x mysqld || true
+  for _ in {1..30}; do
+    pgrep -x mysqld >/dev/null || { echo "MySQL stopped."; exit 0; }
+    sleep 1
+  done
+  echo "MySQL didn’t stop in time; forcing..."
+  pkill -KILL -x mysqld || true
+else
+  echo "mysqld not running; skipping."
+fi
+
+exit 0
