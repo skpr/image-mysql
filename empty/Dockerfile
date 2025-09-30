@@ -1,5 +1,4 @@
-ARG FROM_IMAGE
-FROM ${FROM_IMAGE}
+FROM from_image
 
 ARG db_name=local
 ARG db_user=local
