@@ -31,6 +31,11 @@ RUN chmod 755 /usr/local/bin/*
 ENV MYSQL_TCP_PORT=3306
 
 ADD my.cnf /etc/mysql/mysql.cnf
+ADD tls/ca.pem /etc/mysql/ssl/ca.pem
+ADD tls/server-cert.pem /etc/mysql/ssl/server-cert.pem
+ADD tls/server-key.pem /etc/mysql/ssl/server-key.pem
+RUN chown -R mysql:mysql /etc/mysql/ssl
+
 
 # MTK - A toolkit for exporting, sanitizing and packaging MySQL database.
 # https://github.com/skpr/mtk
