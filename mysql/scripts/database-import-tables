@@ -2,7 +2,14 @@
 
 DATABASE=$1
 DUMP_DIR=$2
+
+# work out the number of cpus
 MAX_CONCURRENT=4
+if command -v "nproc" &> /dev/null; then
+  MAX_CONCURRENT=$(nproc)
+elif command -v "sysctl" &> /dev/null; then
+  MAX_CONCURRENT=$(sysctl -n hw.ncpu)
+fi
 
 mysql-drop-tables ${MYSQL_USERNAME} ${MYSQL_PASSWORD} ${MYSQL_HOSTNAME} ${DATABASE}
 
