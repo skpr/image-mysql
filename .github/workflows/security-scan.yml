@@ -20,10 +20,10 @@ jobs:
       fail-fast: false
       matrix:
         image_ref:
-          - ghcr.io/skpr/mysql:v2-latest
-          - ghcr.io/skpr/mysql-empty:v2-latest
-          - ghcr.io/skpr/mysql-dump:v2-latest
-          - ghcr.io/skpr/mysql-import:v2-latest
+          - ghcr.io/skpr/mysql:v3-latest
+          - ghcr.io/skpr/mysql-empty:v3-latest
+          - ghcr.io/skpr/mysql-dump:v3-latest
+          - ghcr.io/skpr/mysql-import:v3-latest
 
     steps:
       - name: 🔑 Log in to the GitHub Container Registry
