@@ -16,6 +16,6 @@ else
   echo "mysqld not running; skipping."
 fi
 
-rm -rf /run/mysqld/*
+rm -rf /run/mysqld/*.sock /run/mysqld/*.sock.lock
 
 exit 0
