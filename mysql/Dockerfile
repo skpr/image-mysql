@@ -21,10 +21,6 @@ RUN { \
       mysql-server && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /run/mysqld && \
-    chown mysql:mysql /run/mysqld
-VOLUME /run/mysqld
-
 COPY scripts /usr/local/bin
 RUN chmod 755 /usr/local/bin/*
 
