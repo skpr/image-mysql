@@ -16,4 +16,6 @@ else
   echo "mysqld not running; skipping."
 fi
 
+rm -rf /run/mysqld/*
+
 exit 0
