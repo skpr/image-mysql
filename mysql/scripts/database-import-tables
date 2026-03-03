@@ -2,14 +2,24 @@
 
 DATABASE=$1
 DUMP_DIR=$2
+MAX_CONCURRENT=4
 
 mysql-drop-tables ${MYSQL_USERNAME} ${MYSQL_PASSWORD} ${MYSQL_HOSTNAME} ${DATABASE}
 
-for i in ${DUMP_DIR}/*.sql
-do
-  echo "Starting to import: $i"
+# define the worker function
+import_sql() {
+  local sqlfile="$1"
+  echo "Starting to import: $sqlfile"
   start=$(date +%s)
-  MYSQL_PWD="${MYSQL_PASSWORD}" mysql --user=${MYSQL_USERNAME} --host=${MYSQL_HOSTNAME} ${DATABASE} < $i
+  MYSQL_PWD="${MYSQL_PASSWORD}" mysql --user=${MYSQL_USERNAME} --host=${MYSQL_HOSTNAME} ${DATABASE} < $sqlfile
   end=$(date +%s)
-  echo "Finished importing $i in: $(($end-$start)) seconds"
-done
+  echo "Finished importing $sqlfile in: $(($end-$start)) seconds"
+}
+export -f import_sql
+export DATABASE
+export MYSQL_HOSTNAME
+export MYSQL_USERNAME
+export MYSQL_PASSWORD
+
+find "$DUMP_DIR" -type f -name '*.sql' -print0 \
+  | xargs -0 -n1 -P"$MAX_CONCURRENT" bash -c 'import_sql "$@"' _
