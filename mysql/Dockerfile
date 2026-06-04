@@ -7,9 +7,10 @@ RUN groupadd -r mysql && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      netcat \
+      netcat-openbsd \
       gnupg \
-      rsync
+      rsync && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN { \
   echo mysql-server mysql-server/root_password password 'root'; \
