@@ -8,3 +8,5 @@ ARG db_file=/tmp/db.sql
 ADD db.sql ${db_file}
 
 RUN database-import ${db_name} ${db_user} ${db_pass} ${db_file}
+
+CMD ["/usr/local/bin/mysql-start"]
