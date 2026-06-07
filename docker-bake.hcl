@@ -34,7 +34,7 @@ target "mysql" {
   context  = "mysql"
 
   contexts = {
-    from_image = "docker-image://ubuntu:22.04"
+    from_image = "docker-image://ubuntu:24.04"
   }
 
   tags = [

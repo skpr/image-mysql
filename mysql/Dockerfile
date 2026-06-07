@@ -7,9 +7,10 @@ RUN groupadd -r mysql && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      netcat \
+      netcat-openbsd \
       gnupg \
-      rsync
+      rsync && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN { \
   echo mysql-server mysql-server/root_password password 'root'; \
@@ -30,7 +31,7 @@ ADD my.cnf /etc/mysql/mysql.cnf
 
 # MTK - A toolkit for exporting, sanitizing and packaging MySQL database.
 # https://github.com/skpr/mtk
-COPY --from=ghcr.io/skpr/mtk:v2.1.1 /usr/local/bin/mtk /usr/local/bin/mtk
+COPY --from=ghcr.io/skpr/mtk:v2.3.4 /usr/local/bin/mtk /usr/local/bin/mtk
 
 USER mysql
 
